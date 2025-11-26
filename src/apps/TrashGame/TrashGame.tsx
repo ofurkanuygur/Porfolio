@@ -158,26 +158,7 @@ const TrashGame: React.FC = () => {
         return GAME_ITEMS[0];
     }, []);
 
-    const spawnItem = useCallback(() => {
-        const item = getRandomItem();
-        itemIdCounter++;
-        const id = itemIdCounter;
-        const x = Math.random() * 80 + 10;
-        const baseSpeed = slowMode ? 0.5 : 1.2;
-        // Çok değişken hızlar: yavaş ile hızlı arasında rastgele
-        const randomFactor = Math.random() * Math.random() * 6; // Bazıları çok yavaş, bazıları çok hızlı
-        const speed = baseSpeed + randomFactor + (scoreRef.current / 25);
 
-        setItems(prev => [...prev, {
-            id,
-            x,
-            y: -10,
-            emoji: item.emoji,
-            speed,
-            type: item.type,
-            points: item.points,
-        }]);
-    }, [getRandomItem, slowMode]);
 
     const handleCatch = useCallback((item: TrashItem) => {
         const containerWidth = containerRef.current?.clientWidth || 400;
@@ -236,9 +217,29 @@ const TrashGame: React.FC = () => {
     const updateGame = useCallback((time: number) => {
         if (gameState !== 'playing') return;
 
+        // Spawn logic
+        const spawnedItems: TrashItem[] = [];
         const spawnInterval = Math.max(250, SPAWN_RATE - scoreRef.current * 20);
+
         if (time - lastSpawnTime.current > spawnInterval) {
-            spawnItem();
+            const item = getRandomItem();
+            itemIdCounter++;
+            const id = itemIdCounter;
+            const x = Math.random() * 80 + 10;
+            const baseSpeed = slowMode ? 0.5 : 1.2;
+            const randomFactor = Math.random() * Math.random() * 6;
+            const speed = baseSpeed + randomFactor + (scoreRef.current / 25);
+
+            spawnedItems.push({
+                id,
+                x,
+                y: -10,
+                emoji: item.emoji,
+                speed,
+                type: item.type,
+                points: item.points,
+            });
+
             lastSpawnTime.current = time;
         }
 
@@ -264,63 +265,74 @@ const TrashGame: React.FC = () => {
             .filter(t => t.life > 0)
         );
 
-        // Update items
-        setItems(prevItems => {
-            const newItems: TrashItem[] = [];
-            let missed = false;
+        // Calculate item movements and collisions
+        const newItems: TrashItem[] = [];
+        const caughtItems: TrashItem[] = [];
+        const missedItems: TrashItem[] = [];
+        const shippedCleanCodeItems: TrashItem[] = [];
 
-            const containerWidth = containerRef.current?.clientWidth || 400;
-            const isMobile = containerWidth < 640;
-            const currentBinWidth = isMobile ? BIN_WIDTH_MOBILE : BIN_WIDTH_DESKTOP;
+        const containerWidth = containerRef.current?.clientWidth || 400;
+        const isMobile = containerWidth < 640;
+        const currentBinWidth = isMobile ? BIN_WIDTH_MOBILE : BIN_WIDTH_DESKTOP;
 
-            const binLeft = binX - ((currentBinWidth * binSize) / 2 / containerWidth * 100);
-            const binRight = binX + ((currentBinWidth * binSize) / 2 / containerWidth * 100);
+        const binLeft = binX - ((currentBinWidth * binSize) / 2 / containerWidth * 100);
+        const binRight = binX + ((currentBinWidth * binSize) / 2 / containerWidth * 100);
 
-            prevItems.forEach(item => {
-                const newY = item.y + item.speed;
+        // Process existing items
+        items.forEach(item => {
+            const newY = item.y + item.speed;
 
-                if (newY > 82 && newY < 95 && item.x > binLeft && item.x < binRight) {
-                    handleCatch(item);
-                    return;
+            if (newY > 82 && newY < 95 && item.x > binLeft && item.x < binRight) {
+                caughtItems.push(item);
+            } else if (newY > 100) {
+                if (item.type === 'cleancode') {
+                    shippedCleanCodeItems.push(item);
+                } else if (item.type !== 'powerup') {
+                    missedItems.push(item);
                 }
+            } else {
+                newItems.push({ ...item, y: newY });
+            }
+        });
 
-                if (newY > 100) {
-                    // Clean code passing is OK!
-                    if (item.type === 'cleancode') {
-                        const itemX = (item.x / 100) * containerWidth;
-                        createFloatingText(itemX, 400, "Clean code shipped! ✨", '#22c55e');
-                    } else if (item.type !== 'powerup') {
-                        missed = true;
-                    }
-                } else {
-                    newItems.push({ ...item, y: newY });
-                }
-            });
+        // Add spawned items
+        newItems.push(...spawnedItems);
 
-            if (missed) {
-                const message = MISS_MESSAGES[Math.floor(Math.random() * MISS_MESSAGES.length)];
-                const containerWidth = containerRef.current?.clientWidth || 400;
-                createFloatingText(containerWidth / 2, 400, message, '#ef4444');
-                createFireworks(containerWidth / 2, 400, '#ef4444', 15);
+        // Update items state
+        setItems(newItems);
 
-                const newLives = livesRef.current - 1;
-                setLives(newLives);
-                setCombo(0); // Combo sıfırlanır
+        // Process caught items
+        caughtItems.forEach(item => {
+            handleCatch(item);
+        });
 
-                if (newLives <= 0) {
-                    setGameState('gameover');
-                    if (scoreRef.current > highScore) {
-                        setHighScore(scoreRef.current);
-                        localStorage.setItem('trashGameHighScore', scoreRef.current.toString());
-                    }
+        // Process missed items
+        if (missedItems.length > 0) {
+            const message = MISS_MESSAGES[Math.floor(Math.random() * MISS_MESSAGES.length)];
+            createFloatingText(containerWidth / 2, 400, message, '#ef4444');
+            createFireworks(containerWidth / 2, 400, '#ef4444', 15);
+
+            const newLives = livesRef.current - 1;
+            setLives(newLives);
+            setCombo(0);
+
+            if (newLives <= 0) {
+                setGameState('gameover');
+                if (scoreRef.current > highScore) {
+                    setHighScore(scoreRef.current);
+                    localStorage.setItem('trashGameHighScore', scoreRef.current.toString());
                 }
             }
+        }
 
-            return newItems;
+        // Process shipped clean code items
+        shippedCleanCodeItems.forEach(item => {
+            const itemX = (item.x / 100) * containerWidth;
+            createFloatingText(itemX, 400, "Clean code shipped! ✨", '#22c55e');
         });
 
         requestRef.current = requestAnimationFrame(updateGame);
-    }, [gameState, binX, binSize, spawnItem, handleCatch, highScore, createFloatingText, createFireworks]);
+    }, [gameState, binX, binSize, getRandomItem, slowMode, handleCatch, highScore, createFloatingText, createFireworks, items]); // Added 'items' to dependencies
 
     // Power-up timer
     useEffect(() => {
@@ -473,7 +485,7 @@ const TrashGame: React.FC = () => {
 
             {/* Bin */}
             <div
-                className="absolute bottom-2 sm:bottom-4 transform -translate-x-1/2 transition-all duration-100"
+                className="absolute bottom-16 sm:bottom-4 transform -translate-x-1/2 transition-all duration-100"
                 style={{
                     left: `${binX}%`,
                     transform: `translateX(-50%) scale(${binSize})`,

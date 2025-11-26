@@ -137,8 +137,8 @@ const Window: React.FC<WindowProps> = ({
             animate={{
                 scale: 1,
                 opacity: 1,
-                width: effectiveMaximized ? '100vw' : width,
-                height: effectiveMaximized ? '100vh' : height,
+                width: effectiveMaximized ? '100%' : width,
+                height: effectiveMaximized ? '100%' : height,
                 x: effectiveMaximized ? 0 : x,
                 y: effectiveMaximized ? 0 : y,
                 borderRadius: effectiveMaximized ? 0 : 12,
@@ -167,21 +167,21 @@ const Window: React.FC<WindowProps> = ({
                 <div className="flex items-center gap-1.5 sm:gap-2 group" role="group" aria-label="Window controls">
                     <button
                         onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#ff5f56] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 !min-w-0 !min-h-0 rounded-full bg-[#ff5f56] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Close window"
                     >
                         <X size={6} className="sm:w-2 sm:h-2 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#ffbd2e] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 !min-w-0 !min-h-0 rounded-full bg-[#ffbd2e] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Minimize window"
                     >
                         <Minus size={6} className="sm:w-2 sm:h-2 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); maximizeWindow(id); }}
-                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#27c93f] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 !min-w-0 !min-h-0 rounded-full bg-[#27c93f] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Maximize window"
                     >
                         <Maximize2 size={5} className="sm:w-1.5 sm:h-1.5 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />

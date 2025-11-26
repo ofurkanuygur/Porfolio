@@ -27,7 +27,7 @@ const DesktopContent: React.FC = () => {
     }, [toggleSpotlight, isSpotlightOpen, closeSpotlight]);
 
     return (
-        <div className="relative flex h-screen w-full flex-col overflow-hidden">
+        <div className="relative flex h-[100dvh] w-full flex-col overflow-hidden">
             {/* Background */}
             <div
                 className="absolute inset-0 z-0 h-full w-full bg-cover bg-center"

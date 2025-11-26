@@ -152,8 +152,8 @@ const MenuBar: React.FC = () => {
                 />
             )}
 
-            <header className="flex w-full items-center justify-between whitespace-nowrap px-4 py-1 backdrop-blur-md" style={{ backgroundColor: 'var(--bg-menubar)', color: 'var(--text-primary)' }}>
-                <div className="flex items-center gap-4">
+            <header className="flex w-full items-center justify-between whitespace-nowrap px-2 sm:px-4 py-1 backdrop-blur-md" style={{ backgroundColor: 'var(--bg-menubar)', color: 'var(--text-primary)' }}>
+                <div className="flex items-center gap-2 sm:gap-4">
                     <div className="size-5">
                         <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path clipRule="evenodd" d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zM8.28 15.22a.75.75 0 001.06 0l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25a.75.75 0 00-1.06 1.06L11.94 10l-3.66 3.66a.75.75 0 000 1.06z" fillRule="evenodd"></path>

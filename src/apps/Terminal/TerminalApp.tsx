@@ -46,8 +46,8 @@ const TerminalApp: React.FC = () => {
     };
 
     return (
-        <div className="h-full bg-black/90 text-green-400 font-mono p-4 overflow-hidden flex flex-col text-sm sm:text-base">
-            <div className="flex-1 overflow-y-auto space-y-2 custom-scrollbar">
+        <div className="h-full w-full bg-black/90 text-green-400 font-mono p-4 flex flex-col text-sm sm:text-base">
+            <div className="flex-1 overflow-y-auto space-y-2 custom-scrollbar min-h-0">
                 {history.map((msg, i) => (
                     <div key={i} className={`${msg.type === 'user' ? 'text-white' : 'text-green-400'}`}>
                         <span className="opacity-50 mr-2">{msg.type === 'user' ? '>' : '$'}</span>
@@ -70,7 +70,7 @@ const TerminalApp: React.FC = () => {
                 <div ref={bottomRef} />
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-2 flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="mt-2 flex items-center gap-2 flex-shrink-0 pb-2">
                 <span className="text-white opacity-50">{'>'}</span>
                 <input
                     type="text"
