@@ -161,34 +161,34 @@ const Window: React.FC<WindowProps> = ({
         >
             {/* Title Bar */}
             <div
-                className="h-10 bg-transparent flex items-center justify-between px-3 sm:px-4 select-none cursor-default flex-shrink-0"
+                className="h-9 sm:h-10 bg-transparent flex items-center justify-between px-2 sm:px-4 select-none cursor-default flex-shrink-0"
                 onDoubleClick={() => maximizeWindow(id)}
             >
-                <div className="flex items-center gap-2 group" role="group" aria-label="Window controls">
+                <div className="flex items-center gap-1.5 sm:gap-2 group" role="group" aria-label="Window controls">
                     <button
                         onClick={(e) => { e.stopPropagation(); closeWindow(id); }}
-                        className="w-3.5 h-3.5 rounded-full bg-[#ff5f56] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#ff5f56] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Close window"
                     >
-                        <X size={8} className="opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
+                        <X size={6} className="sm:w-2 sm:h-2 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); minimizeWindow(id); }}
-                        className="w-3.5 h-3.5 rounded-full bg-[#ffbd2e] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#ffbd2e] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Minimize window"
                     >
-                        <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
+                        <Minus size={6} className="sm:w-2 sm:h-2 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); maximizeWindow(id); }}
-                        className="w-3.5 h-3.5 rounded-full bg-[#27c93f] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
+                        className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#27c93f] flex items-center justify-center hover:brightness-90 active:brightness-75 transition-all border border-black/10"
                         aria-label="Maximize window"
                     >
-                        <Maximize2 size={6} className="opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
+                        <Maximize2 size={5} className="sm:w-1.5 sm:h-1.5 opacity-0 group-hover:opacity-100 text-black/70 stroke-[3]" aria-hidden="true" />
                     </button>
                 </div>
 
-                <div className="font-medium text-xs sm:text-sm flex-1 text-center mr-12 sm:mr-14 truncate" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>
+                <div className="font-medium text-xs sm:text-sm flex-1 text-center mr-10 sm:mr-14 truncate" style={{ color: 'var(--text-primary)', opacity: 0.8 }}>
                     {title}
                 </div>
             </div>

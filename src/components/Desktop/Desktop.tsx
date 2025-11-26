@@ -32,7 +32,7 @@ const DesktopContent: React.FC = () => {
             <div
                 className="absolute inset-0 z-0 h-full w-full bg-cover bg-center"
                 style={{
-                    backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCjQeNWmmNYCzrOMOYr_J-gJmWJrV8WLBhrXx9u7c0H18lPOqtOSylYv-0OLPl2lJIWPXKMVkpZaQBbD0Lo5MmiFqKLa6RmJZXnAEDA2mhbEnxmMJaDUb2lJVXLgoxcxiNpMGuVHf1bYkEsjGscD-xE6MCWfql5QFio2dY64ZtcIxRwOT6AypvaFuRkYzIOLthet4iweWwyj9aHOaFfT_iIalmO9lGP7Rkp8ouMEYWRchLPR25W7px7j2XA68goOfkW5vrL2awJABjj')"
+                    backgroundImage: `url('${import.meta.env.BASE_URL}background.png')`
                 }}
             />
 
