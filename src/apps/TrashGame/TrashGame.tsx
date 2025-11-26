@@ -68,7 +68,8 @@ const COMBO_MESSAGES: Record<number, string> = {
     25: "YOU'RE HIRED! 💼",
 };
 
-const BIN_WIDTH = 80;
+const BIN_WIDTH_DESKTOP = 80;
+const BIN_WIDTH_MOBILE = 50;
 const SPAWN_RATE = 400; // Çok daha hızlı spawn
 let itemIdCounter = 0; // Unique ID için
 let particleIdCounter = 0; // Unique particle ID
@@ -269,8 +270,11 @@ const TrashGame: React.FC = () => {
             let missed = false;
 
             const containerWidth = containerRef.current?.clientWidth || 400;
-            const binLeft = binX - ((BIN_WIDTH * binSize) / 2 / containerWidth * 100);
-            const binRight = binX + ((BIN_WIDTH * binSize) / 2 / containerWidth * 100);
+            const isMobile = containerWidth < 640;
+            const currentBinWidth = isMobile ? BIN_WIDTH_MOBILE : BIN_WIDTH_DESKTOP;
+
+            const binLeft = binX - ((currentBinWidth * binSize) / 2 / containerWidth * 100);
+            const binRight = binX + ((currentBinWidth * binSize) / 2 / containerWidth * 100);
 
             prevItems.forEach(item => {
                 const newY = item.y + item.speed;
@@ -374,7 +378,7 @@ const TrashGame: React.FC = () => {
     return (
         <div
             ref={containerRef}
-            className="relative w-full h-full bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 overflow-hidden select-none text-white font-sans"
+            className="relative w-full h-full bg-gradient-to-b from-slate-900 via-purple-900 to-slate-900 overflow-hidden select-none text-white font-sans touch-none"
             onMouseMove={handleMouseMove}
             onTouchMove={handleTouchMove}
         >
@@ -490,9 +494,9 @@ const TrashGame: React.FC = () => {
                     </h1>
                     <p className="text-sm sm:text-lg text-gray-300 mb-1 sm:mb-2">Senior Developer Simulator</p>
                     <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6 text-center">
-                        Catch bugs 🐛 and bad code 💩<br/>
-                        Avoid catching clean code ⭐<br/>
-                        Collect power-ups ☕🍕<br/>
+                        Catch bugs 🐛 and bad code 💩<br />
+                        Avoid catching clean code ⭐<br />
+                        Collect power-ups ☕🍕<br />
                         <span className="text-red-400">❤️ 3 Lives</span>
                     </p>
                     <button
