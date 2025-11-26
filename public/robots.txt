@@ -1,0 +1,10 @@
+# robots.txt for Oktay Furkan Uygur Portfolio
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://oktayfurkanuygur.com/sitemap.xml
+
+# Disallow admin/private paths (if any)
+Disallow: /api/
+Disallow: /.env
