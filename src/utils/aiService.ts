@@ -1,5 +1,6 @@
 import { cvData } from '../data/cv_data';
 import { getBotResponse } from './chatbot';
+import { logChatInteraction } from './supabase';
 
 interface Message {
     type: 'user' | 'bot';
@@ -359,9 +360,19 @@ export const getAIResponse = async (
         }
 
         // Sanitize AI response to prevent any potential XSS from AI output
-        return sanitizeAIResponse(content);
+        const sanitizedResponse = sanitizeAIResponse(content);
+
+        // Log the interaction to Supabase (async, don't await)
+        logChatInteraction(sanitizedMessage, sanitizedResponse);
+
+        return sanitizedResponse;
     } catch (error) {
         console.error('AI service error:', error);
-        return getBotResponse(sanitizedMessage);
+        const fallbackResponse = getBotResponse(sanitizedMessage);
+
+        // Log fallback response too
+        logChatInteraction(sanitizedMessage, fallbackResponse);
+
+        return fallbackResponse;
     }
 };
