@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { useOS } from '../../context/OSContext';
 import PreviewApp from '../../apps/Preview/PreviewApp';
 import { FileText, Sun, Moon, Volume2, VolumeX, Lock, ChevronRight, Wifi, WifiOff, Battery, BatteryCharging, Zap } from 'lucide-react';
+import { cvData } from '../../data/cv_data';
 
 // Funny WiFi network names
 const funnyWifiNetworks = [
@@ -136,7 +137,7 @@ const MenuBar: React.FC = () => {
     };
 
     const openContact = () => {
-        window.location.href = 'mailto:example@email.com';
+        window.location.href = `mailto:${cvData.personal.email}`;
     };
 
     return (
