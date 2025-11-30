@@ -19,7 +19,7 @@ const funnyWifiNetworks = [
     { name: "WiFi Değil Bu Tuzak", signal: 1, locked: true },
 ];
 
-// Notification component
+// Enhanced Notification component with glassmorphism
 interface NotificationProps {
     show: boolean;
     title: string;
@@ -30,23 +30,38 @@ interface NotificationProps {
 
 const Notification: React.FC<NotificationProps> = ({ show, title, message, icon, isDarkMode }) => (
     <div
-        className={`fixed top-12 right-2 sm:right-4 z-[9999] w-[calc(100vw-1rem)] sm:w-80 max-w-80 rounded-xl shadow-2xl overflow-hidden transition-all duration-500 ease-out ${show ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-            }`}
+        className={`fixed top-14 right-2 sm:right-4 z-[9999] w-[calc(100vw-1rem)] sm:w-80 max-w-80 rounded-2xl overflow-hidden ${show ? 'notification-enter' : 'translate-x-full opacity-0'}`}
         style={{
-            backgroundColor: isDarkMode ? 'rgba(50, 50, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(20px)',
-            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`
+            backgroundColor: isDarkMode ? 'rgba(30, 32, 40, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+            backdropFilter: 'blur(40px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+            border: `1px solid ${isDarkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'}`,
+            boxShadow: isDarkMode
+                ? '0 20px 60px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.1)'
+                : '0 20px 60px rgba(0,0,0,0.15), 0 0 1px rgba(0,0,0,0.1)',
         }}
     >
-        <div className="flex items-start gap-3 p-3 sm:p-4">
-            <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-500 flex items-center justify-center text-white">
+        {/* Gradient accent line */}
+        <div className="h-0.5 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+
+        <div className="flex items-start gap-3 p-4">
+            <div
+                className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg"
+                style={{
+                    background: 'linear-gradient(135deg, #0a84ff 0%, #bf5af2 100%)',
+                    boxShadow: '0 4px 12px rgba(10, 132, 255, 0.4)',
+                }}
+            >
                 {icon}
             </div>
-            <div className="flex-1 min-w-0">
-                <p className="font-semibold text-sm">{title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{message}</p>
+            <div className="flex-1 min-w-0 pt-0.5">
+                <p className="font-semibold text-sm tracking-tight">{title}</p>
+                <p className="text-xs mt-1 opacity-60 leading-relaxed">{message}</p>
             </div>
-            <span className="text-xs text-gray-400">şimdi</span>
+            <div className="flex flex-col items-end gap-1">
+                <span className="text-[10px] font-medium opacity-40 uppercase tracking-wider">now</span>
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+            </div>
         </div>
     </div>
 );
@@ -153,47 +168,80 @@ const MenuBar: React.FC = () => {
                 />
             )}
 
-            <header className="flex w-full items-center justify-between whitespace-nowrap px-2 sm:px-4 py-1 backdrop-blur-md" style={{ backgroundColor: 'var(--bg-menubar)', color: 'var(--text-primary)' }}>
-                <div className="flex items-center gap-2 sm:gap-4">
-                    <div className="size-5">
-                        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <header
+                className="flex w-full items-center justify-between whitespace-nowrap px-3 sm:px-5 py-1.5 glass-panel-strong"
+                style={{ color: 'var(--text-primary)' }}
+            >
+                <div className="flex items-center gap-3 sm:gap-5">
+                    {/* Apple-style logo with gradient */}
+                    <div className="size-5 relative">
+                        <div
+                            className="absolute inset-0 rounded-full blur-md opacity-50"
+                            style={{ background: 'linear-gradient(135deg, #0a84ff, #bf5af2)' }}
+                        />
+                        <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className="relative">
                             <path clipRule="evenodd" d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zM8.28 15.22a.75.75 0 001.06 0l4.25-4.25a.75.75 0 000-1.06l-4.25-4.25a.75.75 0 00-1.06 1.06L11.94 10l-3.66 3.66a.75.75 0 000 1.06z" fillRule="evenodd"></path>
                         </svg>
                     </div>
-                    <h2 className="text-sm font-bold">Portfolio</h2>
-                    <nav className="hidden items-center gap-4 pl-4 md:flex">
-                        <button onClick={openContact} className="text-sm font-medium leading-normal hover:opacity-80 transition-opacity">Contact</button>
-                        <button onClick={openResume} className="text-sm font-medium leading-normal hover:opacity-80 transition-opacity">Resume</button>
+                    <h2 className="text-sm font-bold tracking-tight">Portfolio</h2>
+                    <nav className="hidden items-center gap-1 pl-2 md:flex">
+                        <button
+                            onClick={openContact}
+                            className="menubar-btn text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+                        >
+                            Contact
+                        </button>
+                        <button
+                            onClick={openResume}
+                            className="menubar-btn text-sm font-medium px-3 py-1.5 rounded-lg hover:bg-white/10 transition-all"
+                        >
+                            Resume
+                        </button>
                     </nav>
                 </div>
-                <div className="flex flex-1 items-center justify-end gap-1 sm:gap-3">
-                    <div className="flex items-center gap-1 sm:gap-3">
+                <div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
+                    <div className="flex items-center gap-0.5 sm:gap-1">
                         {/* Theme Toggle */}
                         <button
                             onClick={toggleTheme}
-                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-all active:scale-95"
+                            className="menubar-btn flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
                             aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                         >
-                            {isDarkMode ? <Sun size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Moon size={16} className="sm:w-[18px] sm:h-[18px]" />}
+                            {isDarkMode ? (
+                                <Sun size={17} className="text-amber-400" />
+                            ) : (
+                                <Moon size={17} className="text-indigo-400" />
+                            )}
                         </button>
                         {/* Sound Toggle */}
                         <button
                             onClick={toggleSound}
-                            className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-all active:scale-95"
+                            className="menubar-btn flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
                             aria-label={isSoundEnabled ? 'Mute sounds' : 'Enable sounds'}
                         >
-                            {isSoundEnabled ? <Volume2 size={16} className="sm:w-[18px] sm:h-[18px]" /> : <VolumeX size={16} className="sm:w-[18px] sm:h-[18px]" />}
+                            {isSoundEnabled ? (
+                                <Volume2 size={17} className="text-green-400" />
+                            ) : (
+                                <VolumeX size={17} className="opacity-50" />
+                            )}
                         </button>
                         {/* WiFi Dropdown */}
                         <div className="relative" ref={wifiRef}>
                             <button
                                 onClick={() => setWifiOpen(!wifiOpen)}
-                                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-colors"
+                                className="menubar-btn flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
                                 aria-label="WiFi menu"
                                 aria-expanded={wifiOpen}
                                 aria-haspopup="menu"
                             >
-                                {wifiEnabled ? <Wifi size={16} className="sm:w-[18px] sm:h-[18px]" /> : <WifiOff size={16} className="sm:w-[18px] sm:h-[18px] opacity-60" />}
+                                {wifiEnabled ? (
+                                    <div className="relative">
+                                        <Wifi size={17} className="text-blue-400" />
+                                        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green-400 rounded-full status-pulse" />
+                                    </div>
+                                ) : (
+                                    <WifiOff size={17} className="opacity-40" />
+                                )}
                             </button>
 
                             {wifiOpen && (
@@ -298,12 +346,19 @@ const MenuBar: React.FC = () => {
                         <div className="relative" ref={batteryRef}>
                             <button
                                 onClick={() => setBatteryOpen(!batteryOpen)}
-                                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-colors"
+                                className="menubar-btn flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
                                 aria-label="Battery menu"
                                 aria-expanded={batteryOpen}
                                 aria-haspopup="menu"
                             >
-                                {isCharging ? <BatteryCharging size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Battery size={16} className="sm:w-[18px] sm:h-[18px]" />}
+                                <div className="relative flex items-center gap-1">
+                                    {isCharging ? (
+                                        <BatteryCharging size={17} className="text-green-400" />
+                                    ) : (
+                                        <Battery size={17} className={batteryLevel > 20 ? 'text-green-400' : 'text-red-400'} />
+                                    )}
+                                    <span className="text-[10px] font-medium opacity-60 hidden sm:inline">{batteryLevel}%</span>
+                                </div>
                             </button>
 
                             {batteryOpen && (
@@ -393,14 +448,41 @@ const MenuBar: React.FC = () => {
                                 </div>
                             )}
                         </div>
-                        <a href="https://github.com/ofurkanuygur" target="_blank" rel="noopener noreferrer" aria-label="GitHub Profile" className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-colors">
-                            <svg aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 24 24"><path clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.893 7.917 6.838 9.139.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.81.61-3.4-1.355-3.4-1.355-.455-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.852 0 1.338-.012 2.419-.012 2.747 0 .267.18.577.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" fillRule="evenodd"></path></svg>
+                        {/* Separator */}
+                        <div className="w-px h-4 bg-current opacity-10 mx-1 hidden sm:block" />
+
+                        {/* Social Links */}
+                        <a
+                            href="https://github.com/ofurkanuygur"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="GitHub Profile"
+                            className="menubar-btn flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
+                        >
+                            <svg aria-hidden="true" className="h-[17px] w-[17px]" fill="currentColor" viewBox="0 0 24 24">
+                                <path clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.286 2.893 7.917 6.838 9.139.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.81.61-3.4-1.355-3.4-1.355-.455-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.03-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.852 0 1.338-.012 2.419-.012 2.747 0 .267.18.577.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" fillRule="evenodd" />
+                            </svg>
                         </a>
-                        <a href="https://www.linkedin.com/in/oktay-furkan-uygur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn Profile" className="hidden sm:flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-md hover:bg-white/20 cursor-pointer transition-colors">
-                            <svg aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.75c0-1.4-.5-2.5-1.8-2.5-1 0-1.5.7-1.7 1.3-.1.2-.1.5-.1.8V19h-3v-9h3v1.5c.5-.7 1.3-1.5 2.8-1.5 2 0 3.3 1.3 3.3 4.1V19z"></path></svg>
+                        <a
+                            href="https://www.linkedin.com/in/oktay-furkan-uygur/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn Profile"
+                            className="menubar-btn hidden sm:flex h-8 w-8 items-center justify-center rounded-lg hover:bg-white/15 cursor-pointer transition-all active:scale-90"
+                        >
+                            <svg aria-hidden="true" className="h-[17px] w-[17px] text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3v9zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.75c0-1.4-.5-2.5-1.8-2.5-1 0-1.5.7-1.7 1.3-.1.2-.1.5-.1.8V19h-3v-9h3v1.5c.5-.7 1.3-1.5 2.8-1.5 2 0 3.3 1.3 3.3 4.1V19z" />
+                            </svg>
                         </a>
                     </div>
-                    <p className="text-xs sm:text-sm font-medium">{format(time, 'h:mm a')}</p>
+
+                    {/* Clock with enhanced styling */}
+                    <div className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-current/10">
+                        <p className="text-xs sm:text-sm font-semibold tracking-tight tabular-nums">
+                            {format(time, 'h:mm')}
+                            <span className="opacity-50 ml-0.5">{format(time, 'a')}</span>
+                        </p>
+                    </div>
                 </div>
             </header>
         </>
